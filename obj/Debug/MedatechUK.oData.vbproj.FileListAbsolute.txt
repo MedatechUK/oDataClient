@@ -1,0 +1,14 @@
+M:\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.vbprojAssemblyReference.cache
+M:\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.vbproj.GenerateResource.cache
+M:\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.vbproj.CoreCompileInputs.cache
+M:\MedatechUK.Packages\MedatechUK.oData\bin\Debug\MedatechUK.oData.dll
+M:\MedatechUK.Packages\MedatechUK.oData\bin\Debug\MedatechUK.oData.pdb
+M:\MedatechUK.Packages\MedatechUK.oData\bin\Debug\MedatechUK.oData.xml
+M:\MedatechUK.Packages\MedatechUK.oData\bin\Debug\Newtonsoft.Json.dll
+M:\MedatechUK.Packages\MedatechUK.oData\bin\Debug\Newtonsoft.Json.xml
+M:\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.vbproj.CopyComplete
+M:\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.dll
+M:\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.xml
+M:\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.pdb
+M:\MedatechUK.Packages\MedatechUK.oData\bin\Debug\odata.config
+M:\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.Resources.resources
