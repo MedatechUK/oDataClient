@@ -408,7 +408,7 @@ Namespace oData
                             .WriteEndObject()
                         End With
 
-                        Log("{0}", t.ToString)
+                        Log(Me, "{0}", t.ToString)
 
                         Dim myEncoder As New System.Text.ASCIIEncoding
                         Return New MemoryStream(myEncoder.GetBytes(t.ToString))
@@ -443,6 +443,7 @@ Namespace oData
                 With TryCast(e, oException)
                     If .StatusCode = HttpStatusCode.Conflict Then
                         Log(
+                            Me,
                             "[{0}] {1}. PATCHing instead.",
                             CInt(.StatusCode),
                             .StatusCode.ToString
@@ -486,7 +487,7 @@ Namespace oData
 
                 Case Else
                     Exception = e
-                    Log(Exception.Message)
+                    Log(Me, e)
 
                     Return False
 
@@ -550,7 +551,7 @@ Namespace oData
 
                 Case Else
                     Exception = e
-                    Log(Exception.Message)
+                    Log(Me, e)
 
                     Return False
 
@@ -615,7 +616,7 @@ Namespace oData
 
                 Case Else
                     Exception = e
-                    Log(Exception.Message)
+                    Log(Me, e)
 
                     Return False
 

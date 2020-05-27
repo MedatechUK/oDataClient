@@ -3,22 +3,34 @@ Namespace oData
 
     Public Class Loading : Implements IDisposable
 
-        Private o As ODAT_TRANS
-        Private otrans As rowODAT_TRANS
+        Private o As ZODA_TRANS
+        Private otrans As rowZODA_TRANS
 
         Private _StrType As String
         Private bubbleid As String
+
+        Private _ologHandler As EventHandler
+        Public Sub EventLog(sender As Object, e As LogArgs)
+            _ologHandler.Invoke(sender, e)
+
+        End Sub
 
         ''' <summary>
         ''' oData Loading Constructor
         ''' </summary>
         ''' <param name="strtype">Transaction Type</param>
-        Sub New(strtype As String)
+        Sub New(strtype As String, Optional ologHandler As EventHandler = Nothing)
+
+            _ologHandler = ologHandler
+            If Not _ologHandler Is Nothing Then
+                AddHandler LogModule.LogEvent, AddressOf EventLog
+
+            End If
 
             bubbleid = System.Guid.NewGuid.ToString
             _StrType = strtype
 
-            o = New ODAT_TRANS(Reflection.Assembly.GetExecutingAssembly)
+            o = New ZODA_TRANS(Reflection.Assembly.GetExecutingAssembly)
             otrans = o.AddRow()
             With otrans
                 .TYPENAME = _StrType
@@ -33,9 +45,9 @@ Namespace oData
         ''' </summary>
         ''' <param name="Recordtype">Integer record type for load row</param>
         ''' <returns>the created row</returns>
-        Public Function AddRow(Recordtype As Integer) As rowODAT_LOAD
+        Public Function AddRow(Recordtype As Integer) As rowZODA_LOAD
 
-            Dim ret As rowODAT_LOAD = otrans.ODAT_LOAD.AddRow
+            Dim ret As rowZODA_LOAD = otrans.ZODA_LOAD.AddRow
             With ret
                 .RECORDTYPE = Recordtype.ToString
             End With
@@ -55,7 +67,7 @@ Namespace oData
             o.Post()
             ErCheck(o, ex)
             If ex.Count = 0 Then
-                Using F As New ODAT_TRANS(Reflection.Assembly.GetExecutingAssembly)
+                Using F As New ZODA_TRANS(Reflection.Assembly.GetExecutingAssembly)
                     With F
                         With .AddRow()
                             .TYPENAME = _StrType

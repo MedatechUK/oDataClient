@@ -2,6 +2,9 @@
 Imports System.Net
 Imports System.Xml
 Imports System.Xml.Serialization
+Imports System.Web
+Imports System.Web.Configuration
+Imports Newtonsoft.Json
 
 Namespace oData
 
@@ -10,15 +13,72 @@ Namespace oData
     ''' </summary>
     Public Class oClient : Implements IDisposable
 
-        Public ReadOnly Property ConfigFile As FileInfo
+        ''' <summary>
+        ''' This method load the approproiate configuration
+        ''' depending if there is an http context.
+        ''' If there is no context settings come from odata.config 
+        ''' in the executing path.
+        ''' Otherwise the settings come from the web.config file
+        ''' of the website.
+        ''' </summary>
+        ''' <returns></returns>
+        Private ReadOnly Property settings As odataConfig
             Get
-                Return New FileInfo(Path.Combine(Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly.Location), "odata.config"))
+                If HttpContext.Current Is Nothing Then ' Use config file
+                    Dim cFile As New FileInfo(
+                        Path.Combine(
+                            Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly.Location),
+                            "odata.config"
+                        )
+                    )
+                    If cFile.Exists Then
+                        Try
+                            Dim s As New XmlSerializer(GetType(odataConfig))
+                            Using sr As New StreamReader(cFile.FullName)
+                                Return s.Deserialize(sr)
+                            End Using
+
+                        Catch ex As Exception
+                            Throw New Exception(
+                                String.Format(
+                                    "Error loading odata.config {0}. {1}",
+                                    cFile.FullName,
+                                    ex.Message
+                                )
+                            )
+
+                        End Try
+
+                    Else
+                        Throw New Exception(
+                            String.Format(
+                                "Missing odata.config in {0}.",
+                                cFile.DirectoryName
+                            )
+                        )
+
+                    End If
+
+                Else ' Use web config
+                    Dim c As New odataConfig
+                    With c
+                        .oDataHost = WebConfigurationManager.AppSettings("oDataHost")
+                        .tabulaini = WebConfigurationManager.AppSettings("tabulaini")
+                        .environment = HttpContext.Current.Request("environment")
+                        .ouser = WebConfigurationManager.AppSettings("ouser")
+                        .opass = WebConfigurationManager.AppSettings("opass")
+
+                    End With
+
+                    Return c
+
+                End If
 
             End Get
+
         End Property
 
         Private _Request As Net.HttpWebRequest
-
 
         ''' <summary>
         ''' oClient constructor method.
@@ -27,44 +87,44 @@ Namespace oData
         ''' <param name="Method">String</param>
         Sub New(Path As String, Optional Method As String = "POST")
 
-            Dim s As New XmlSerializer(GetType(odataConfig))
-            Dim config As odataConfig
-            Dim uri As New UriBuilder
-
             Try
-                Using sr As New StreamReader(ConfigFile.FullName)
+                Dim config As odataConfig = settings
+                Dim uri As New UriBuilder
 
-                    config = s.Deserialize(sr)
-                    With uri
-                        .Scheme = Split(config.oDataHost, "://")(0)
-                        .Host = Split(config.oDataHost, "://")(1)
-                        .Path = String.Format(
-                        "/odata/Priority/{0}/{1}{2}",
-                        config.tabulaini,
-                        config.environment,
-                        Path
-                    )
+                With uri
+                    .Scheme = Split(config.oDataHost, "://")(0)
+                    .Host = Split(config.oDataHost, "://")(1)
+                    .Path = String.Format(
+                    "/odata/Priority/{0}/{1}{2}",
+                    config.tabulaini,
+                    config.environment,
+                    Path
+                )
 
-                        Log("{0} ROOT{1}", Method.ToUpper, Path)
+                    Log(Me, "{0} ROOT{1}", Method.ToUpper, Path)
 
-                        _Request = CType(Net.HttpWebRequest.Create(uri.Uri), Net.HttpWebRequest)
-                        With _Request
-                            .Method = Method
-                            .Proxy = Nothing
-                            .UserAgent = "Medatech .net oData Client"
-                            .ContentType = "application/json"
-                            .Credentials = New NetworkCredential(
+                    _Request = CType(Net.HttpWebRequest.Create(.Uri), Net.HttpWebRequest)
+                    With _Request
+                        .Method = Method
+                        .Proxy = Nothing
+                        .UserAgent = "Medatech .net oData Client"
+                        .ContentType = "application/json"
+                        .Credentials = New NetworkCredential(
                             config.ouser,
                             config.opass
                         )
 
-                        End With
-
                     End With
-                End Using
+
+                End With
 
             Catch ex As Exception
-                Throw New Exception("Invalid oData configuration.")
+                Throw New Exception(
+                    String.Format(
+                        "{0}",
+                        ex.Message
+                    )
+                )
 
             End Try
 
@@ -121,20 +181,18 @@ Namespace oData
                             Dim str As String
                             With .Response
                                 Using reader As New StreamReader(.GetResponseStream)
-                                    str = reader.ReadToEnd()
+                                    str = reader.ReadToEnd
                                 End Using
                             End With
 
                             Try
-                                Dim lder As New XmlDocument
-                                lder.LoadXml(str)
+                                Dim er As interfaceError = JsonConvert.DeserializeObject(str, GetType(interfaceError))
                                 With TryCast(.Response, HttpWebResponse)
                                     e = New Exception(
-                                        String.Format("{1}",
+                                        String.Format("({1}) {2}",
                                             CInt(.StatusCode).ToString,
-                                            lder.SelectSingleNode(
-                                                "FORM/InterfaceErrors/text"
-                                            ).InnerText
+                                            er.form.TypeName,
+                                            er.form.Errs.text
                                         )
                                     )
 
@@ -142,7 +200,8 @@ Namespace oData
 
                             Catch xmlex As Exception
                                 If Len(str) > 0 Then
-                                    If _Request.Method.ToUpper = "GET" And TryCast(.Response, HttpWebResponse).StatusCode = HttpStatusCode.InternalServerError Then
+                                    If _Request.Method.ToUpper = "GET" _
+                                        And TryCast(.Response, HttpWebResponse).StatusCode = HttpStatusCode.InternalServerError Then
                                         With TryCast(.Response, HttpWebResponse)
                                             e = New oException(
                                                 HttpStatusCode.NotFound,
@@ -200,7 +259,6 @@ Namespace oData
                         End If
 
                     End With
-
 
                 Catch ex As Exception
                     e = ex
