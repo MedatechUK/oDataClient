@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>MedatechUK.oData</id>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
     <authors>Simon Barnett</authors>
     <owners>Simon Barnett</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -10,8 +10,14 @@
     <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
     <icon>medatech.png</icon>
     <description>A oData Client for Priority ERP.</description>
-    <releaseNotes>Fixed .net version to 4.6.1.</releaseNotes>
-    <repository url="https://github.com/medatechuk/oDataClient" />
+    <releaseNotes>Updated the loading table references.
+
+Added the new JSON interfaceErrors.
+
+Moved logging to a handler.
+
+Updated setting to work from either web or console.</releaseNotes>
+    <repository type="git" url="https://github.com/medatechuk/oDataClient" />
 
   </metadata>
   <files>
