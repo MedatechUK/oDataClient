@@ -101,7 +101,7 @@ Namespace oData
                     Path
                 )
 
-                    Log(Me, "{0} ROOT{1}", Method.ToUpper, Path)
+                    Log(Me, "{0} {1}", Method.ToUpper, uri.ToString)
 
                     _Request = CType(Net.HttpWebRequest.Create(.Uri), Net.HttpWebRequest)
                     With _Request

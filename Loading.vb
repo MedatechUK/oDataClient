@@ -117,6 +117,10 @@ Namespace oData
             If Not disposedValue Then
                 If disposing Then
                     ' TODO: dispose managed state (managed objects).
+                    If Not _ologHandler Is Nothing Then
+                        RemoveHandler LogModule.LogEvent, AddressOf EventLog
+
+                    End If
 
                 End If
 
@@ -140,6 +144,7 @@ Namespace oData
             ' TODO: uncomment the following line if Finalize() is overridden above.
             ' GC.SuppressFinalize(Me)
         End Sub
+
 #End Region
 
     End Class

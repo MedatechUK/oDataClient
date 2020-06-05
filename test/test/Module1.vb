@@ -1,7 +1,5 @@
 ﻿Imports MedatechUK.oData
 
-
-
 Module Module1
 
     Sub Main()
