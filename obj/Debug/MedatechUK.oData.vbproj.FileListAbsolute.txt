@@ -12,3 +12,16 @@ M:\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.xml
 M:\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.pdb
 M:\MedatechUK.Packages\MedatechUK.oData\bin\Debug\odata.config
 M:\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.Resources.resources
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\bin\Debug\odata.config
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\bin\Debug\MedatechUK.oData.dll
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\bin\Debug\MedatechUK.oData.pdb
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\bin\Debug\MedatechUK.oData.xml
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\bin\Debug\Newtonsoft.Json.dll
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\bin\Debug\Newtonsoft.Json.xml
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.Resources.resources
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.vbproj.GenerateResource.cache
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.vbproj.CoreCompileInputs.cache
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.vbproj.CopyComplete
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.dll
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.xml
+D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.pdb
