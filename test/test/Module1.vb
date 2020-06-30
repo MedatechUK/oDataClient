@@ -10,12 +10,21 @@ Module Module1
                 .TEXT1 = "a"
 
             End With
-            With .AddRow(1)
-                .TEXT1 = "a"
+            With .AddRow(2)
+                .TEXT1 = "b"
 
             End With
-            Dim er As List(Of Exception) = .Post()
-            Beep()
+            With .AddRow(2)
+                .TEXT1 = "c"
+
+            End With
+
+            Dim ex As Exception = .Post()
+            If Not ex Is Nothing Then
+                Console.WriteLine(ex.Message)
+
+            End If
+
         End With
 
     End Sub

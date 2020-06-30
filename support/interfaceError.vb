@@ -1,29 +1,33 @@
 ﻿Imports Newtonsoft.Json
 
-Public Class interfaceError
-    '{"FORM":{"@TYPE":"ZODA_TRANS","InterfaceErrors":{"@XmlFormat":"0","text":"Line 1- Type TST: The value 'TST' does not exist in the Type column of the z oData Transaction Types table."}}}
+Namespace oData
 
-    <JsonProperty("FORM")>
-    Public form As interr
+    Public Class interfaceError
+        '{"FORM":{"@TYPE":"ZODA_TRANS","InterfaceErrors":{"@XmlFormat":"0","text":"Line 1- Type TST: The value 'TST' does not exist in the Type column of the z oData Transaction Types table."}}}
 
-End Class
+        <JsonProperty("FORM")>
+        Public form As interr
 
-Public Class interr
+    End Class
 
-    <JsonProperty("@TYPE")>
-    Public TypeName As String
+    Public Class interr
 
-    <JsonProperty("InterfaceErrors")>
-    Public Errs As Err
+        <JsonProperty("@TYPE")>
+        Public TypeName As String
 
-End Class
+        <JsonProperty("InterfaceErrors")>
+        Public Errs As Err
 
-Public Class Err
+    End Class
 
-    <JsonProperty("@XmlFormat")>
-    Public XmlFormat As Integer
+    Public Class Err
 
-    <JsonProperty("text")>
-    Public text As String
+        <JsonProperty("@XmlFormat")>
+        Public XmlFormat As Integer
 
-End Class
+        <JsonProperty("text")>
+        Public text As String
+
+    End Class
+
+End Namespace

@@ -1,4 +1,5 @@
-﻿Imports Newtonsoft.Json
+﻿Imports System.IO
+Imports Newtonsoft.Json
 
 Namespace oData
 
@@ -24,6 +25,18 @@ Namespace oData
                 '.WriteStartObject()
                 .WritePropertyName(name)
                 .WriteValue(value)
+                '.WriteEndObject()
+            End With
+
+        End Sub
+
+        Public Sub WriteAttributeObject(name As String, value As MemoryStream)
+            With Me
+                '.WriteStartObject()
+                .WritePropertyName(name)
+                .WriteStartArray()
+                .WriteRaw(New StreamReader(value).ReadToEnd)
+                .WriteEndArray()
                 '.WriteEndObject()
             End With
 

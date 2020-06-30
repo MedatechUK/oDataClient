@@ -1,4 +1,6 @@
-﻿Imports System.Reflection
+﻿Imports System.IO
+Imports System.Reflection
+Imports Newtonsoft.Json
 
 Namespace oData
 
@@ -78,6 +80,12 @@ Namespace oData
         End Property
 
         ''' <summary>
+        ''' Contains the last exception from posting this row.
+        ''' </summary>
+        ''' <returns>oException</returns>
+        Public Property Exception As Exception
+
+        ''' <summary>
         ''' Form Constructor method.
         ''' </summary>
         ''' <param name="Parent">oRow</param>
@@ -118,22 +126,100 @@ Namespace oData
 
 #Region "Post"
 
+        Public ReadOnly Property RequestStream As MemoryStream
+            Get
+                Using t As New StringWriter()
+                    Using objx As New JTextWriter(t)
+                        For Each row As oRow In Me
+                            With objx
+                                .WriteStartObject()
+                                For Each ch As String In row.changes.Keys
+                                    If Not row.changes(ch).ReadOnly Then
+                                        .WriteAttributeObject(ch, row.getProperty(ch))
+
+                                    End If
+                                Next
+                                For Each sf As oForm In row.SubForms.Values
+                                    .WriteAttributeObject(String.Format("{0}_SUBFORM", sf.Name), sf.RequestStream)
+
+                                Next
+                                .WriteEndObject()
+                                If Not row Is Me.Last Then
+                                    .WriteRaw(" , ")
+
+                                End If
+                            End With
+
+                        Next
+
+                        Dim myEncoder As New System.Text.ASCIIEncoding
+                        Return New MemoryStream(myEncoder.GetBytes(t.ToString))
+
+                    End Using
+
+                End Using
+
+            End Get
+        End Property
+
         ''' <summary>
         ''' Post the form oData to the Priority server.
         ''' </summary>
-        Public Sub Post()
-            For Each row As oRow In Me
-                If row.Post() Then
-                    For Each sf As oForm In row.SubForms.Values
-                        sf.Post()
+        Public Function Post(Optional Verb As String = "POST") As Boolean
+
+            System.Net.ServicePointManager.ServerCertificateValidationCallback =
+          Function(se As Object,
+          cert As System.Security.Cryptography.X509Certificates.X509Certificate,
+          chain As System.Security.Cryptography.X509Certificates.X509Chain,
+          sslerror As System.Net.Security.SslPolicyErrors) True
+
+            Dim e As Object
+            Using client As New oClient("/" & Me(0).FormType.Name, Verb)
+                Log(Me, "{0}", New StreamReader(RequestStream).ReadToEnd)
+                RequestStream.Position = 0
+                e = client.GetResponse(RequestStream)
+
+            End Using
+
+            Select Case TypeOf (e) Is Exception
+                Case False
+                    Dim o As Object
+                    Using reader As New StreamReader(
+                        TryCast(e, Net.WebResponse).GetResponseStream
+                    )
+                        o = JsonConvert.DeserializeObject(
+                            reader.ReadToEnd(),
+                            Me(0)._serialType
+                        )
+
+                    End Using
+
+                    For Each i In o.GetType.GetProperties
+                        If Not i.GetValue(o) Is Nothing Then
+                            If Keys.Contains(i.Name) Then
+                                Me(0)(i.Name) = i.GetValue(o)
+
+                            End If
+
+                        End If
 
                     Next
 
-                End If
+                    Me(0).changes.Clear()
+                    Exception = Nothing
+                    Log("{0}", "OK.")
 
-            Next
+                    Return True
 
-        End Sub
+                Case Else
+                    Exception = e
+                    Log(Me, e)
+
+                    Return False
+
+            End Select
+
+        End Function
 
 #End Region
 

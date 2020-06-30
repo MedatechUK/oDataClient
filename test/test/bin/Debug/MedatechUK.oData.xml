@@ -41,13 +41,6 @@ MedatechUK.oData
  </summary>
  <returns>List(of exception)</returns>
 </member>
-<member name="M:MedatechUK.oData.Loading.ErCheck(MedatechUK.oData.oForm,System.Collections.Generic.List{System.Exception}@)">
- <summary>
- Recursively check the result for errors
- </summary>
- <param name="f">oForm to Check</param>
- <param name="EX">List of exceptions</param>
-</member>
 <member name="T:MedatechUK.oData.oClient">
  <summary>
  An oData client
@@ -120,13 +113,19 @@ MedatechUK.oData
  </summary>
  <returns>String</returns>
 </member>
+<member name="P:MedatechUK.oData.oForm.Exception">
+ <summary>
+ Contains the last exception from posting this row.
+ </summary>
+ <returns>oException</returns>
+</member>
 <member name="M:MedatechUK.oData.oForm.#ctor(System.Reflection.Assembly@,MedatechUK.oData.oRow)">
  <summary>
  Form Constructor method.
  </summary>
  <param name="Parent">oRow</param>
 </member>
-<member name="M:MedatechUK.oData.oForm.Post">
+<member name="M:MedatechUK.oData.oForm.Post(System.String)">
  <summary>
  Post the form oData to the Priority server.
  </summary>

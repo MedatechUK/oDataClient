@@ -60,53 +60,17 @@ Namespace oData
         ''' Post the data to the server specified in the odata.config
         ''' </summary>
         ''' <returns>List(of exception)</returns>
-        Public Function Post() As List(Of Exception)
+        Public Function Post() As Exception
 
-            Dim ex As New List(Of Exception)
+            If Not o.Post Then Return o.Exception
+            With TryCast(o(0), rowZODA_TRANS)
+                .COMPLETE = "Y"
+                If Not .Patch() Then Return .Exception
+            End With
 
-            o.Post()
-            ErCheck(o, ex)
-            If ex.Count = 0 Then
-                Using F As New ZODA_TRANS(Reflection.Assembly.GetExecutingAssembly)
-                    With F
-                        With .AddRow()
-                            .TYPENAME = _StrType
-                            .BUBBLEID = bubbleid
-                            .COMPLETE = "Y"
-
-                        End With
-
-                        .Post()
-                        ErCheck(F, ex)
-
-                    End With
-
-                End Using
-
-            End If
-
-            Return ex
+            Return Nothing
 
         End Function
-
-        ''' <summary>
-        ''' Recursively check the result for errors
-        ''' </summary>
-        ''' <param name="f">oForm to Check</param>
-        ''' <param name="EX">List of exceptions</param>
-        Private Sub ErCheck(f As oForm, ByRef EX As List(Of Exception))
-            For Each row As oRow In f
-                If Not row.Exception Is Nothing Then
-                    EX.Add(row.Exception)
-
-                End If
-                For Each sf As oForm In row.SubForms.Values
-                    ErCheck(sf, EX)
-
-                Next
-            Next
-
-        End Sub
 
 #Region "IDisposable Support"
 

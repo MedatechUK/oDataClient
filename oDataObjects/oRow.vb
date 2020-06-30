@@ -87,10 +87,10 @@ Namespace oData
 #Region "Local Variables"
 
         Private _Parent As oForm = Nothing
-        Private changes As New Dictionary(Of String, oDataColumn)
+        Public changes As New Dictionary(Of String, oDataColumn)
 
-        Private _formType As Type
-        Private _serialType As Type
+        Public _formType As Type
+        Public _serialType As Type
 
 #End Region
 
@@ -482,6 +482,7 @@ Namespace oData
 
                     changes.Clear()
                     Exception = Nothing
+                    Log("{0}", "OK.")
 
                     Return True
 
@@ -546,6 +547,7 @@ Namespace oData
 
                     changes.Clear()
                     Exception = Nothing
+                    Log("{0}", "OK.")
 
                     Return True
 
