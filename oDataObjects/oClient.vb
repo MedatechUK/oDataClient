@@ -85,7 +85,7 @@ Namespace oData
         ''' </summary>
         ''' <param name="Path">String</param>
         ''' <param name="Method">String</param>
-        Sub New(Path As String, Optional Method As String = "POST")
+        Sub New(Path As String, Optional Method As String = "POST", Optional Query As String = "")
 
             Try
                 Dim config As odataConfig = settings
@@ -95,11 +95,12 @@ Namespace oData
                     .Scheme = Split(config.oDataHost, "://")(0)
                     .Host = Split(config.oDataHost, "://")(1)
                     .Path = String.Format(
-                    "/odata/Priority/{0}/{1}{2}",
-                    config.tabulaini,
-                    config.environment,
-                    Path
-                )
+                        "/odata/Priority/{0}/{1}{2}",
+                        config.tabulaini,
+                        config.environment,
+                        Path
+                    )
+                    .Query = Query
 
                     Log(Me, "{0} {1}", Method.ToUpper, uri.ToString)
 

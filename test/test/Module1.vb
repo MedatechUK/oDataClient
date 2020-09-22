@@ -14,10 +14,10 @@ Module Module1
                 .TEXT1 = "b"
 
             End With
-            With .AddRow(2)
-                .TEXT1 = "c"
+            'With .AddRow(2)
+            '    .TEXT1 = "c"
 
-            End With
+            'End With
 
             Dim ex As Exception = .Post()
             If Not ex Is Nothing Then
