@@ -25,3 +25,6 @@ D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.
 D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.dll
 D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.xml
 D:\nas\PriorityMobile\MedatechUK.Packages\MedatechUK.oData\obj\Debug\MedatechUK.oData.pdb
+M:\MedatechUK.Packages\MedatechUK.oData\bin\Debug\MedatechUK.Log.dll
+M:\MedatechUK.Packages\MedatechUK.oData\bin\Debug\MedatechUK.Log.pdb
+M:\MedatechUK.Packages\MedatechUK.oData\bin\Debug\MedatechUK.Log.xml

@@ -1,17 +1,19 @@
 ﻿Imports System.IO
 Imports System.Net
-Imports System.Xml
 Imports System.Xml.Serialization
 Imports System.Web
 Imports System.Web.Configuration
 Imports Newtonsoft.Json
+Imports MedatechUK.Logging
 
 Namespace oData
 
     ''' <summary>
     ''' An oData client
     ''' </summary>
-    Public Class oClient : Implements IDisposable
+    Public Class oClient
+        Inherits logable
+        Implements IDisposable
 
         ''' <summary>
         ''' This method load the approproiate configuration
@@ -24,13 +26,17 @@ Namespace oData
         ''' <returns></returns>
         Private ReadOnly Property settings As odataConfig
             Get
+                Log("Detecting Stream Context ...")
                 If HttpContext.Current Is Nothing Then ' Use config file
+                    Log("Stream is FILE.")
                     Dim cFile As New FileInfo(
                         Path.Combine(
                             Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly.Location),
                             "odata.config"
                         )
                     )
+
+                    Log("Loading oData settings from [{0}] ...", cFile.FullName)
                     If cFile.Exists Then
                         Try
                             Dim s As New XmlSerializer(GetType(odataConfig))
@@ -60,6 +66,8 @@ Namespace oData
                     End If
 
                 Else ' Use web config
+                    Log("Stream is HTTP.")
+                    Log("Loading oData settings from [{0}] ... ", HttpContext.Current.Server.MapPath("/"))
                     Dim c As New odataConfig
                     With c
                         .oDataHost = WebConfigurationManager.AppSettings("oDataHost")
@@ -85,11 +93,12 @@ Namespace oData
         ''' </summary>
         ''' <param name="Path">String</param>
         ''' <param name="Method">String</param>
-        Sub New(Path As String, Optional Method As String = "POST", Optional Query As String = "")
+        Sub New(Path As String, Environment As String, Optional Method As String = "POST", Optional Query As String = "")
 
             Try
                 Dim config As odataConfig = settings
                 Dim uri As New UriBuilder
+                If Environment Is Nothing Then Environment = config.environment
 
                 With uri
                     .Scheme = Split(config.oDataHost, "://")(0)
@@ -97,7 +106,7 @@ Namespace oData
                     .Path = String.Format(
                         "/odata/Priority/{0}/{1}{2}",
                         config.tabulaini,
-                        config.environment,
+                        Environment,
                         Path
                     )
                     .Query = Query
@@ -302,6 +311,7 @@ Namespace oData
             ' TODO: uncomment the following line if Finalize() is overridden above.
             ' GC.SuppressFinalize(Me)
         End Sub
+
 #End Region
 
     End Class

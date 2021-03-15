@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports System.Reflection
 Imports Newtonsoft.Json
+Imports MedatechUK.Logging
 
 Namespace oData
 
@@ -43,7 +44,9 @@ Namespace oData
     ''' <summary>
     ''' Defines a Priorty Form for oData.
     ''' </summary>
-    Public MustInherit Class oForm : Inherits List(Of oRow) : Implements IDisposable
+    Public MustInherit Class oForm
+        Inherits List(Of oRow)
+        Implements IDisposable
 
         Public Keys As New List(Of String)
         Private _Parent As oRow = Nothing
@@ -165,7 +168,7 @@ Namespace oData
         ''' <summary>
         ''' Post the form oData to the Priority server.
         ''' </summary>
-        Public Function Post(Optional Verb As String = "POST") As Boolean
+        Public Function Post(Environment As String, Optional Verb As String = "POST") As Boolean
 
             System.Net.ServicePointManager.ServerCertificateValidationCallback =
           Function(se As Object,
@@ -174,7 +177,7 @@ Namespace oData
           sslerror As System.Net.Security.SslPolicyErrors) True
 
             Dim e As Object
-            Using client As New oClient("/" & Me(0).FormType.Name, Verb)
+            Using client As New oClient("/" & Me(0).FormType.Name, Environment, Verb)
                 Log(Me, "{0}", New StreamReader(RequestStream).ReadToEnd)
                 RequestStream.Position = 0
                 e = client.GetResponse(RequestStream)

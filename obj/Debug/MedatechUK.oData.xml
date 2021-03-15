@@ -35,7 +35,7 @@ MedatechUK.oData
  <param name="Recordtype">Integer record type for load row</param>
  <returns>the created row</returns>
 </member>
-<member name="M:MedatechUK.oData.Loading.Post">
+<member name="M:MedatechUK.oData.Loading.Post(System.String)">
  <summary>
  Post the data to the server specified in the odata.config
  </summary>
@@ -57,7 +57,7 @@ MedatechUK.oData
  </summary>
  <returns></returns>
 </member>
-<member name="M:MedatechUK.oData.oClient.#ctor(System.String,System.String)">
+<member name="M:MedatechUK.oData.oClient.#ctor(System.String,System.String,System.String,System.String)">
  <summary>
  oClient constructor method.
  </summary>
@@ -125,7 +125,7 @@ MedatechUK.oData
  </summary>
  <param name="Parent">oRow</param>
 </member>
-<member name="M:MedatechUK.oData.oForm.Post(System.String)">
+<member name="M:MedatechUK.oData.oForm.Post(System.String,System.String)">
  <summary>
  Post the form oData to the Priority server.
  </summary>

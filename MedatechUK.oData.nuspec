@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>MedatechUK.oData</id>
-    <version>1.7.0</version>
+    <version>1.8.0</version>
     <authors>Simon Barnett</authors>
     <owners>Simon Barnett</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -10,7 +10,7 @@
     <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
     <icon>medatech.png</icon>
     <description>A oData Client for Priority ERP.</description>
-    <releaseNotes>Added a form POST to the Loading class to aggregate data, and changed the complete call to PATCH. </releaseNotes>
+    <releaseNotes>Impliments the new MedateckUK.Log handler.</releaseNotes>
     <repository type="git" url="https://github.com/medatechuk/oDataClient" />
 
   </metadata>

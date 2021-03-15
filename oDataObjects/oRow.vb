@@ -2,6 +2,7 @@
 Imports System.Net
 Imports System.Reflection
 Imports Newtonsoft.Json
+Imports MedatechUK.Logging
 
 Namespace oData
 

@@ -85,7 +85,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="support\interfaceError.vb" />
-    <Compile Include="support\LogModule.vb" />
     <Compile Include="oDataObjects\oClient.vb" />
     <Compile Include="oDataObjects\oException.vb" />
     <Compile Include="oDataObjects\oForm.vb" />
@@ -94,7 +93,6 @@
     <Compile Include="Schema\ZODA_TRANS.vb" />
     <Compile Include="support\Config.vb" />
     <Compile Include="support\JsonTextWriter.vb" />
-    <Compile Include="support\LogEvent.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -121,6 +119,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MedatechUK.Log\MedatechUK.Log.vbproj">
+      <Project>{def77d25-0edd-42ad-84da-941965dd0eba}</Project>
+      <Name>MedatechUK.Log</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

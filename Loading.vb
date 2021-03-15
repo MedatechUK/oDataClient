@@ -1,7 +1,10 @@
+Imports MedatechUK.Logging
 
 Namespace oData
 
-    Public Class Loading : Implements IDisposable
+    Public Class Loading
+        Inherits logable
+        Implements IDisposable
 
         Private o As ZODA_TRANS
         Private otrans As rowZODA_TRANS
@@ -9,24 +12,13 @@ Namespace oData
         Private _StrType As String
         Private bubbleid As String
 
-        Private _ologHandler As EventHandler
-        Public Sub EventLog(sender As Object, e As LogArgs)
-            _ologHandler.Invoke(sender, e)
-
-        End Sub
-
         ''' <summary>
         ''' oData Loading Constructor
         ''' </summary>
         ''' <param name="strtype">Transaction Type</param>
-        Sub New(strtype As String, Optional ologHandler As EventHandler = Nothing)
+        Sub New(strtype As String, logEventHandler As EventHandler)
 
-            _ologHandler = ologHandler
-            If Not _ologHandler Is Nothing Then
-                AddHandler LogModule.LogEvent, AddressOf EventLog
-
-            End If
-
+            logHandlerDelegate = logEventHandler
             bubbleid = System.Guid.NewGuid.ToString
             _StrType = strtype
 
@@ -60,9 +52,9 @@ Namespace oData
         ''' Post the data to the server specified in the odata.config
         ''' </summary>
         ''' <returns>List(of exception)</returns>
-        Public Function Post() As Exception
+        Public Function Post(Optional Environment As String = Nothing) As Exception
 
-            If Not o.Post Then Return o.Exception
+            If Not o.Post(Environment) Then Return o.Exception
             With TryCast(o(0), rowZODA_TRANS)
                 .COMPLETE = "Y"
                 If Not .Patch() Then Return .Exception
@@ -81,10 +73,6 @@ Namespace oData
             If Not disposedValue Then
                 If disposing Then
                     ' TODO: dispose managed state (managed objects).
-                    If Not _ologHandler Is Nothing Then
-                        RemoveHandler LogModule.LogEvent, AddressOf EventLog
-
-                    End If
 
                 End If
 
@@ -102,6 +90,7 @@ Namespace oData
         'End Sub
 
         ' This code added by Visual Basic to correctly implement the disposable pattern.
+
         Public Sub Dispose() Implements IDisposable.Dispose
             ' Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
             Dispose(True)
