@@ -12,7 +12,7 @@ Namespace oData
     ''' An oData client
     ''' </summary>
     Public Class oClient
-        Inherits logable
+        Inherits Logable
         Implements IDisposable
 
         ''' <summary>
@@ -29,14 +29,26 @@ Namespace oData
                 Log("Detecting Stream Context ...")
                 If HttpContext.Current Is Nothing Then ' Use config file
                     Log("Stream is FILE.")
-                    Dim cFile As New FileInfo(
-                        Path.Combine(
-                            Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly.Location),
-                            "odata.config"
-                        )
-                    )
+                    Dim cFile As FileInfo
+                    Select Case New DirectoryInfo(Environment.CurrentDirectory).FullName
+                        Case New DirectoryInfo(Environment.SystemDirectory).FullName
+                            cFile = New FileInfo(
+                                Path.Combine(
+                                     New FileInfo(Reflection.Assembly.GetEntryAssembly.Location).Directory.FullName,
+                                    "odata.config"
+                                )
+                            )
+                        Case Else
+                            cFile = New FileInfo(
+                                Path.Combine(
+                                     New DirectoryInfo(Environment.CurrentDirectory).FullName,
+                                    "odata.config"
+                                )
+                            )
 
+                    End Select
                     Log("Loading oData settings from [{0}] ...", cFile.FullName)
+
                     If cFile.Exists Then
                         Try
                             Dim s As New XmlSerializer(GetType(odataConfig))
