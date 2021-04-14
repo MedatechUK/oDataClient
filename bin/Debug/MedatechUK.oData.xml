@@ -204,7 +204,7 @@ MedatechUK.oData
  </summary>
  <returns>Boolean</returns>
 </member>
-<member name="M:MedatechUK.oData.oRow.Patch">
+<member name="M:MedatechUK.oData.oRow.Patch(System.String)">
  <summary>
  Send the content of the requeststream to the oData server.
  Returns a boolean value indicating PATCH success.

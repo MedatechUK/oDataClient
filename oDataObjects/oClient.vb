@@ -26,73 +26,77 @@ Namespace oData
         ''' <returns></returns>
         Private ReadOnly Property settings As odataConfig
             Get
-                Log("Detecting Stream Context ...")
-                If HttpContext.Current Is Nothing Then ' Use config file
-                    Log("Stream is FILE.")
-                    Dim cFile As FileInfo
-                    Select Case New DirectoryInfo(Environment.CurrentDirectory).FullName
-                        Case New DirectoryInfo(Environment.SystemDirectory).FullName
-                            cFile = New FileInfo(
-                                Path.Combine(
-                                     New FileInfo(Reflection.Assembly.GetEntryAssembly.Location).Directory.FullName,
-                                    "odata.config"
+                Static ret As odataConfig = Nothing
+                If ret Is Nothing Then
+                    If HttpContext.Current Is Nothing Then ' Use config file
+                        Log("Detecting Stream Context ... Stream is FILE.")
+                        Dim cFile As FileInfo
+                        Select Case New DirectoryInfo(Environment.CurrentDirectory).FullName
+                            Case New DirectoryInfo(Environment.SystemDirectory).FullName
+                                cFile = New FileInfo(
+                                    Path.Combine(
+                                         New FileInfo(Reflection.Assembly.GetEntryAssembly.Location).Directory.FullName,
+                                        "odata.config"
+                                    )
                                 )
-                            )
-                        Case Else
-                            cFile = New FileInfo(
-                                Path.Combine(
-                                     New DirectoryInfo(Environment.CurrentDirectory).FullName,
-                                    "odata.config"
+                            Case Else
+                                cFile = New FileInfo(
+                                    Path.Combine(
+                                         New DirectoryInfo(Environment.CurrentDirectory).FullName,
+                                        "odata.config"
+                                    )
                                 )
-                            )
 
-                    End Select
-                    Log("Loading oData settings from [{0}] ...", cFile.FullName)
+                        End Select
+                        Log("Loading oData settings from [{0}] ...", cFile.FullName)
 
-                    If cFile.Exists Then
-                        Try
-                            Dim s As New XmlSerializer(GetType(odataConfig))
-                            Using sr As New StreamReader(cFile.FullName)
-                                Return s.Deserialize(sr)
-                            End Using
+                        If cFile.Exists Then
+                            Try
+                                Dim s As New XmlSerializer(GetType(odataConfig))
+                                Using sr As New StreamReader(cFile.FullName)
+                                    ret = s.Deserialize(sr)
+                                End Using
 
-                        Catch ex As Exception
+                            Catch ex As Exception
+                                Throw New Exception(
+                                    String.Format(
+                                        "Error loading odata.config {0}. {1}",
+                                        cFile.FullName,
+                                        ex.Message
+                                    )
+                                )
+
+                            End Try
+
+                        Else
                             Throw New Exception(
                                 String.Format(
-                                    "Error loading odata.config {0}. {1}",
-                                    cFile.FullName,
-                                    ex.Message
+                                    "Missing odata.config in {0}.",
+                                    cFile.DirectoryName
                                 )
                             )
 
-                        End Try
+                        End If
 
-                    Else
-                        Throw New Exception(
-                            String.Format(
-                                "Missing odata.config in {0}.",
-                                cFile.DirectoryName
-                            )
-                        )
+                    Else ' Use web config
+                        Log("Detecting Stream Context ... Stream is HTTP.")
+                        Log("Loading oData settings from [{0}] ... ", HttpContext.Current.Server.MapPath("/"))
+                        Dim c As New odataConfig
+                        With c
+                            .oDataHost = WebConfigurationManager.AppSettings("oDataHost")
+                            .tabulaini = WebConfigurationManager.AppSettings("tabulaini")
+                            .environment = HttpContext.Current.Request("environment")
+                            .ouser = WebConfigurationManager.AppSettings("ouser")
+                            .opass = WebConfigurationManager.AppSettings("opass")
+
+                        End With
+
+                        ret = c
 
                     End If
 
-                Else ' Use web config
-                    Log("Stream is HTTP.")
-                    Log("Loading oData settings from [{0}] ... ", HttpContext.Current.Server.MapPath("/"))
-                    Dim c As New odataConfig
-                    With c
-                        .oDataHost = WebConfigurationManager.AppSettings("oDataHost")
-                        .tabulaini = WebConfigurationManager.AppSettings("tabulaini")
-                        .environment = HttpContext.Current.Request("environment")
-                        .ouser = WebConfigurationManager.AppSettings("ouser")
-                        .opass = WebConfigurationManager.AppSettings("opass")
-
-                    End With
-
-                    Return c
-
                 End If
+                Return ret
 
             End Get
 

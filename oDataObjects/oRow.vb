@@ -502,7 +502,7 @@ Namespace oData
         ''' Returns a boolean value indicating PATCH success.
         ''' </summary>
         ''' <returns>Boolean</returns>
-        Public Function Patch() As Boolean
+        Public Function Patch(Environment As String) As Boolean
 
             System.Net.ServicePointManager.ServerCertificateValidationCallback =
           Function(se As Object,
@@ -517,7 +517,9 @@ Namespace oData
                     Me.Path,
                     Me.Key
                 ),
-            "PATCH")
+                Environment,
+                "PATCH"
+            )
 
                 e = client.GetResponse(RequestStream)
 

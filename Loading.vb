@@ -1,9 +1,10 @@
+Imports System.Web
 Imports MedatechUK.Logging
 
 Namespace oData
 
     Public Class Loading
-        Inherits logable
+        Inherits Logable
         Implements IDisposable
 
         Private o As ZODA_TRANS
@@ -19,7 +20,18 @@ Namespace oData
         Sub New(strtype As String, logEventHandler As EventHandler)
 
             logHandlerDelegate = logEventHandler
-            bubbleid = System.Guid.NewGuid.ToString
+
+            If HttpContext.Current Is Nothing Then
+                bubbleid = System.Guid.NewGuid.ToString
+            Else
+                If HttpContext.Current.Items("bubbleid") Is Nothing Then
+                    bubbleid = System.Guid.NewGuid.ToString
+                Else
+                    ' Use the bubbleid from the httpcontext if we're a web server
+                    bubbleid = HttpContext.Current.Items("bubbleid")
+                End If
+            End If
+
             _StrType = strtype
 
             o = New ZODA_TRANS(Reflection.Assembly.GetExecutingAssembly)
@@ -57,7 +69,7 @@ Namespace oData
             If Not o.Post(Environment) Then Return o.Exception
             With TryCast(o(0), rowZODA_TRANS)
                 .COMPLETE = "Y"
-                If Not .Patch() Then Return .Exception
+                If Not .Patch(Environment) Then Return .Exception
             End With
 
             Return Nothing
